@@ -14,16 +14,42 @@
             
 </head>
 <body>
+	
+
+<div class="fixed-action-btn">
+  <a class="btn-floating btn-large red">
+    <i class="large material-icons">mode_edit</i>
+  </a>
+  <ul>
+    <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+    <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+    <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+    <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+  </ul>
+</div>
+      
+
+
 	<div class="container">
+
+		<ul id="slide-out" class="sidenav sidenav-fixed">
+		    <li><a href="#!"><h4>My Projects</h4></a></li>
+			<li><a href="#!" class="collection-item"><span class="badge new indigo darken-4 white-text">1</span>Inbox</a>	</li>
+			<li><a href="#!" class="collection-item"><span class="badge new indigo darken-4 white-text">4</span>Urgent</a>	</li>
+			<li><div class="divider"></div></li>
+    		<li><a class="subheader">Add New Project</a></li>
+			<li>        
+				<div class="input-field margin-horizontal">
+          			<input placeholder="New Project" id="first_name" type="text" class="validate">
+          			  <a class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
+        		</div>
+        	</li>
+
+	    </ul>
 
 
 		<div class="row">
 
-
-    <ul id="slide-out" class="sidenav sidenav-fixed">
-      <li><a href="#!">First Sidebar Link</a></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
-    </ul>
 			<div class="col s12 gray">
 
 				<div class="card grey lighten-2">
@@ -49,6 +75,9 @@
 			</div>
 
 		</div>
+
+
 	</div>
+	<script src="main.js"></script>
 </body>
 </html>

@@ -23,3 +23,12 @@
         padding-left: 0;
       }
     }
+
+span.badge.new::after {
+  content: "" !important;
+}
+
+.margin-horizontal {
+	padding: 0 31px;
+	margin-top:-10px;
+}
