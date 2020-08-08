@@ -5,6 +5,7 @@
   "main": "webpack.config.js",
   "dependencies": {
     "date-fns": "^2.15.0",
+    "live-server": "^1.2.1",
     "materialize-css": "^1.0.0-rc.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
