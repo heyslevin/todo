@@ -1,3 +1,7 @@
+import todomodule from "./todomodule.js";
+
+todomodule();
+
 M.AutoInit();
 
   document.addEventListener('DOMContentLoaded', function() {
