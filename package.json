@@ -2,18 +2,24 @@
   "name": "todo",
   "version": "1.0.0",
   "description": "To Do Project for the Odin Project.",
-  "main": "webpack.config.js",
+  "main": "index.js",
   "dependencies": {
     "date-fns": "^2.15.0",
     "live-server": "^1.2.1",
     "materialize-css": "^1.0.0-rc.2",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
-  "devDependencies": {},
+
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack && live-server ./dist"
   },
   "repository": {
     "type": "git",
