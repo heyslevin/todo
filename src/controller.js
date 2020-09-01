@@ -31,6 +31,12 @@ function controller(model) {
 		return model.getProject();
 	}
 
+
+	function getProjectLi() {
+		return model.getProjectLi();
+	}
+
+
 	function projectArray() {
 	let liList = document.querySelectorAll("a.collection-item");
 	return [...liList]; 		
@@ -38,9 +44,17 @@ function controller(model) {
 
 	function setProject(e) {
 
-		let val = e.target.dataset.val;
+		let inbox = document.querySelector("#inbox");
+		let val;
+		let liCurrent;
 
-		let liCurrent = e.target;
+		if (e===undefined) {
+			val = inbox.dataset.val;
+			liCurrent = inbox;
+		} else {
+			val = e.target.dataset.val;
+			liCurrent = e.target;
+		}
 
 		let liArray = projectArray();
 
@@ -53,14 +67,17 @@ function controller(model) {
 
 
 
-
-		model.setProject(val);
+		model.setProject(val,liCurrent);
 
 	}
 
 	function getTodos(){
 		return model.getTodos();
 		
+	}
+
+	function getTotalTodos() {
+		return model.getTotalTodos();
 	}
 
 	function deleteTask(e){
@@ -87,8 +104,10 @@ function controller(model) {
 		projectArray,
 		addProjectInfo,
 		getProjectInfo,
+		getProjectLi,
 		setProject,
 		getTodos,
+		getTotalTodos,
 		deleteTask,
 		editTask
 	}

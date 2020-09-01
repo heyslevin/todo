@@ -11,17 +11,24 @@ var model = function() {
 
 	var current = "Inbox";
 
+	var currentE;
+
 	var addProject = (val) => {
 		projects.push(val);
 	}
 
 
-	var setProject = (val) => {
+	var setProject = (val,liCurrent) => {
 		current = val;
+		currentE = liCurrent;
 	}
 
 	var getProject = () => {
 		return current;
+	}
+
+	var getProjectLi = () => {
+		return currentE;
 	}
 
 	var addTask = (task) => {
@@ -34,6 +41,10 @@ var model = function() {
 	
 	};
 
+	var getTotalTodos = () => {
+		return todos;
+	}
+
 	var getTodos = () => {
 
 		if (current === "View All") {
@@ -41,9 +52,11 @@ var model = function() {
 			return todos;
 		} else {
 		
-			return todos.filter(todo => {
+			let filtered = todos.filter(todo => {
 				return todo.project === current;
 			});
+
+			return filtered;
 
 		}
 	}
@@ -62,7 +75,6 @@ var model = function() {
 		}
 
 		//todos[index] = todo;
-		console.log(todo);
 		todos.push(todo);
 
 	}
@@ -94,9 +106,11 @@ var model = function() {
 		editTask,
 		projects,
 		getProject,
+		getProjectLi,
 		setProject,
 		addProject,
-		getTodos
+		getTodos,
+		getTotalTodos
 	}
  };
 
