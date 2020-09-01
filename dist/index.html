@@ -34,15 +34,15 @@
 
 		<ul id="slide-out" class="sidenav sidenav-fixed">
 		    <li><a href="#!"><h4>My Projects</h4></a></li>
-			<li><a href="#!" class="collection-item"><span class="badge new indigo darken-4 white-text">1</span>Inbox</a>	</li>
-			<li><a href="#!" class="collection-item"><span class="badge new indigo darken-4 white-text">4</span>Urgent</a>	</li>
-			<li><a href="#!" class="collection-item grey-text"><span class="badge new grey white-text">4</span>View All</a>	</li>
-			<li><div class="divider"></div></li>
+			<li><a href="#!" class="collection-item" data-val="Inbox"><span class="badge new indigo darken-4 white-text">1</span>Inbox</a>	</li>
+			<li><a href="#!" class="collection-item" data-val="Urgent" id="urgent"><span class="badge new indigo darken-4 white-text">4</span>Urgent</a>	</li>
+			<li><a href="#!" class="collection-item" data-val="View All"><span class="badge new grey white-text">4</span>View All</a>	</li>
+			<li id="divider"><div class="divider" id="projects"></div></li>
     		<li><a class="subheader">Add New Project</a></li>
 			<li>        
 				<div class="input-field margin-horizontal">
-          			<input placeholder="New Project" id="first_name" type="text" class="validate">
-          			  <a class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
+          			<input placeholder="New Project" id="projectInput" type="text" class="validate">
+          			  <a class="btn-floating waves-effect waves-light red" id="newProject"><i class="material-icons">add</i></a>
         		</div>
         	</li>
 
