@@ -33,6 +33,7 @@ function view(controller) {
 		renderTask();
 	}
 
+	controller.setProject();
 	eventProject();
 
 	function createProject(project) {
@@ -40,10 +41,9 @@ function view(controller) {
 	const li = document.createElement("li");
 	const span = document.createElement("span");
 	const a = document.createElement("a")
-	const spanNum = document.createElement("spanNum");
 
 	a.href = "#!"
-	a.classList.add("collection-item")
+	a.classList.add("collection-item","grey-text")
 	a.dataset.val = project;
 
 	span.classList.add("badge", "new", "indigo", "darken-4", "white-text")
@@ -58,6 +58,18 @@ function view(controller) {
 
 	};
 
+	function updateCount(i) {
+		let currentProject = controller.getProjectLi();
+
+		let totalCount = controller.getTotalTodos().length;
+		console.log(totalCount);
+		console.log(controller.getTotalTodos())
+		
+		currentProject.children[0].innerHTML = i;
+
+		viewAll.children[0].innerHTML = totalCount;
+	}
+
 	//Selectors
 
 	const container = document.querySelector("#cardzone");
@@ -65,6 +77,7 @@ function view(controller) {
 
 	const myProjects = document.querySelector("#slide-out");
 	const divider = document.querySelector("#divider")
+	const viewAll = document.querySelector("#view-all");
 
 	button.addEventListener("click",generatecard);
 
@@ -261,7 +274,12 @@ function view(controller) {
 
 		var tasks = controller.getTodos(filter);
 
+		//Task Count
+		let i = 0;
+
 		tasks.forEach((task) => {
+
+			i += 1;
 
 			var taskHtml = `
 					<div class="card grey lighten-2" data-index=${task.index}>
@@ -305,6 +323,9 @@ function view(controller) {
 				`;
 
 		container.insertAdjacentHTML('beforeend',taskHtml);	
+
+		//Update Project Count
+		updateCount(i);
 
 		//Selector Delete Button
 		var deleteButtons = document.querySelectorAll("#delete");
