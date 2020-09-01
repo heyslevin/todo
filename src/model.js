@@ -1,25 +1,28 @@
 var model = function() {
 
-	var todos = [
-		// {
-		// 	index: 0,
-		// 	title: "Do Laundry",
-		// 	description: "Clean black and white clothes",
-		// 	dueDate: "Aug 24, 2020",
-		// 	priority: "High"
+	var todos = [];
 
-		// },		
+	var filteredTodos = [];
 
-		// {
-		// 	index: 1,
-		// 	title: "Buy pet food",
-		// 	description: "The 11kg bag from Costco",
-		// 	dueDate: "Aug 25, 2020",
-		// 	priority: "Low"
+	var projects = ["Inbox","Urgent","View All"];
 
-		// },
-	]
 
+	//Managing Projecs
+
+	var current = "Inbox";
+
+	var addProject = (val) => {
+		projects.push(val);
+	}
+
+
+	var setProject = (val) => {
+		current = val;
+	}
+
+	var getProject = () => {
+		return current;
+	}
 
 	var addTask = (task) => {
 
@@ -31,9 +34,27 @@ var model = function() {
 	
 	};
 
+	var getTodos = () => {
+
+		if (current === "View All") {
+			current = "Inbox";
+			return todos;
+		} else {
+		
+			return todos.filter(todo => {
+				return todo.project === current;
+			});
+
+		}
+	}
+
+
+	//Managing tasks
+
 	var newTask = (task) => {
 		const todo = {
 			index: todos.length,
+			project: task.project,
 			title: task.title,
 			description: task.description,
 			dueDate: task.dueDate,
@@ -41,8 +62,8 @@ var model = function() {
 		}
 
 		//todos[index] = todo;
+		console.log(todo);
 		todos.push(todo);
-		console.log(todos);
 
 	}
 
@@ -53,12 +74,12 @@ var model = function() {
 		title: task.title,
 		description: task.description,
 		dueDate: task.dueDate,
-		priority: task.priority
+		priority: task.priority,
+		project: task.project
 	}
 
 	//todos[index] = todo;
 	todos[todo.index] = todo;
-	console.log(todos);
 
 };
 
@@ -70,7 +91,12 @@ var model = function() {
 		todos,
 		addTask,
 		newTask,
-		editTask
+		editTask,
+		projects,
+		getProject,
+		setProject,
+		addProject,
+		getTodos
 	}
  };
 

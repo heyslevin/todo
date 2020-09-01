@@ -1,9 +1,70 @@
 function view(controller) {
 
+	//Project Selection
+	// const urgent = document.querySelector("#urgent");
+	// urgent.addEventListener("click",function(e){ controller.setProject(e,urgent.innerHTML) } );
+
+	//Selectors Projects
+
+	const projectButton = document.querySelector("#newProject");
+	projectButton.addEventListener("click",function(){newProject();})
+
+	//function to capture input data
+	function newProject() {
+		let project = controller.addProjectInfo();
+		createProject(project);
+		eventProject()
+	}
+
+
+	//
+
+	function eventProject() {
+		let liList = controller.projectArray();
+
+		liList.forEach(li => {
+			li.addEventListener("click",function(e){ setProjectView(e) });
+		})
+		
+	}
+
+	function setProjectView(e) {
+		controller.setProject(e);
+		renderTask();
+	}
+
+	eventProject();
+
+	function createProject(project) {
+
+	const li = document.createElement("li");
+	const span = document.createElement("span");
+	const a = document.createElement("a")
+	const spanNum = document.createElement("spanNum");
+
+	a.href = "#!"
+	a.classList.add("collection-item")
+	a.dataset.val = project;
+
+	span.classList.add("badge", "new", "indigo", "darken-4", "white-text")
+	span.innerHTML = "0";
+
+	a.innerHTML = project;
+
+	a.append(span)
+	li.append(a);
+
+	myProjects.insertBefore(li,divider)
+
+	};
+
 	//Selectors
 
 	const container = document.querySelector("#cardzone");
 	const button = document.querySelector("#new-task-button");
+
+	const myProjects = document.querySelector("#slide-out");
+	const divider = document.querySelector("#divider")
 
 	button.addEventListener("click",generatecard);
 
@@ -177,7 +238,7 @@ function view(controller) {
 	function saveEditedTask(index) {
 		controller.getTaskInfo(index);
 		renderTask();
-
+		//Pass project to render task for filtering
 	}
 
 	function startDeleteTask(e) {
@@ -185,13 +246,20 @@ function view(controller) {
 		renderTask();
 	}
 
-	function renderTask() {	
+	function renderTask(filter) {	
 
 		//Clean up board
 		clearTasks()
 
 		//Get all tasks from Model
-		var tasks = controller.getTodos();
+
+		if (filter === undefined) {
+			filter = "Inbox";
+		} else {
+			filter;
+		}
+
+		var tasks = controller.getTodos(filter);
 
 		tasks.forEach((task) => {
 

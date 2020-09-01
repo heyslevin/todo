@@ -7,14 +7,60 @@ function controller(model) {
 			title: document.querySelector("#title").value,
 			description: document.querySelector("#description").value,
 			dueDate: document.querySelector("#dueDate").value,
-			priority: document.querySelector("#priority").value
+			priority: document.querySelector("#priority").value,
+			project: model.getProject()
 		}
 
 		model.addTask(taskViewModel);
 	}
 
+	function addProjectInfo() {
+
+		var projectInput = document.querySelector("#projectInput");
+		var project = document.querySelector("#projectInput").value;
+
+
+		model.addProject(project);
+		projectInput.value = "";
+
+		return project;
+	}
+
+
+	function getProjectInfo() {
+		return model.getProject();
+	}
+
+	function projectArray() {
+	let liList = document.querySelectorAll("a.collection-item");
+	return [...liList]; 		
+	}
+
+	function setProject(e) {
+
+		let val = e.target.dataset.val;
+
+		let liCurrent = e.target;
+
+		let liArray = projectArray();
+
+		liArray.forEach(li => {
+			li.classList.remove("grey-text")
+			li.classList.add("grey-text");
+		})
+
+		liCurrent.classList.toggle("grey-text");
+
+
+
+
+		model.setProject(val);
+
+	}
+
 	function getTodos(){
-		return model.todos;
+		return model.getTodos();
+		
 	}
 
 	function deleteTask(e){
@@ -38,6 +84,10 @@ function controller(model) {
 
 	return {
 		getTaskInfo,
+		projectArray,
+		addProjectInfo,
+		getProjectInfo,
+		setProject,
 		getTodos,
 		deleteTask,
 		editTask
