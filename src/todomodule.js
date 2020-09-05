@@ -1,12 +1,10 @@
 function todoModule() {
-
 	//Selectors
 
 	const container = document.querySelector("#cardzone");
 	const button = document.querySelector("#new-task-button");
 
-	button.addEventListener("click",generatecard);
-
+	button.addEventListener("click", generatecard);
 
 	function generatecard() {
 		let cardinfo = `
@@ -66,30 +64,24 @@ function todoModule() {
 
 		`;
 
-		container.insertAdjacentHTML('beforeend',cardinfo);
+		container.insertAdjacentHTML("beforeend", cardinfo);
 
 		M.AutoInit(document.getElementById("cardjs"));
 
 		//Button Actions
 
-			//Save
+		//Save
 		const savebutton = document.querySelector("#save-button");
-		savebutton.addEventListener("click",createTask);
-		
-
-
-	};
+		savebutton.addEventListener("click", createTask);
+	}
 
 	function alertone() {
-
-		alert("button works")
-
+		alert("button works");
 	}
 
 	//Factory Function
 
-	const NewTask = (title,description,dueDate,priority) => {
-
+	const NewTask = (title, description, dueDate, priority) => {
 		const taskHtml = `
 					<div class="card grey lighten-2">
 
@@ -136,54 +128,38 @@ function todoModule() {
 			title,
 			description,
 			dueDate,
-			priority
-		}
-
-
+			priority,
+		};
 	};
 
 	function removeElement(elementId) {
 		let element = document.querySelector(elementId);
-		element.parentNode.removeChild(element);	
-
+		element.parentNode.removeChild(element);
 	}
 
-
 	function createTask() {
+		const title = document.querySelector("#title").value;
+		const description = document.querySelector("#description").value;
+		const dueDate = document.querySelector("#dueDate").value;
+		const priority = document.querySelector("#priority").value;
 
-			const title = document.querySelector("#title").value;
-			const description = document.querySelector("#description").value;
-			const dueDate = document.querySelector("#dueDate").value;
-			const priority = document.querySelector("#priority").value;
+		// Create task
+		const generateTask = NewTask(title, description, dueDate, priority);
 
+		// Append it
+		container.insertAdjacentHTML("beforeend", generateTask.taskHtml);
 
-			// Create task
-			const generateTask = NewTask(title,description,dueDate,priority);
-
-			// Append it
-			container.insertAdjacentHTML('beforeend',generateTask.taskHtml);
-
-			// Delete Template
-			removeElement("#cardjs");
-
-
-	};
+		// Delete Template
+		removeElement("#cardjs");
+	}
 
 	function deleteTask() {
 		document.body.removeChild(this.parentNode);
-
 	}
 
 	function editTask() {
 		alertone();
 	}
-
-
-
-
-
-
-
-};
+}
 
 export default todoModule;

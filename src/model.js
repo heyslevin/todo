@@ -1,11 +1,9 @@
-var model = function() {
-
+var model = function () {
 	var todos = [];
 
 	var filteredTodos = [];
 
-	var projects = ["Inbox","Urgent","View All"];
-
+	var projects = ["Inbox", "Urgent", "View All"];
 
 	//Managing Projecs
 
@@ -15,52 +13,45 @@ var model = function() {
 
 	var addProject = (val) => {
 		projects.push(val);
-	}
+	};
 
-
-	var setProject = (val,liCurrent) => {
+	var setProject = (val, liCurrent) => {
 		current = val;
 		currentE = liCurrent;
-	}
+	};
 
 	var getProject = () => {
 		return current;
-	}
+	};
 
 	var getProjectLi = () => {
 		return currentE;
-	}
+	};
 
 	var addTask = (task) => {
-
 		if (task.index === undefined) {
 			newTask(task);
 		} else {
 			editTask(task);
 		}
-	
 	};
 
 	var getTotalTodos = () => {
 		return todos;
-	}
+	};
 
 	var getTodos = () => {
-
 		if (current === "View All") {
 			current = "Inbox";
 			return todos;
 		} else {
-		
-			let filtered = todos.filter(todo => {
+			let filtered = todos.filter((todo) => {
 				return todo.project === current;
 			});
 
 			return filtered;
-
 		}
-	}
-
+	};
 
 	//Managing tasks
 
@@ -71,33 +62,26 @@ var model = function() {
 			title: task.title,
 			description: task.description,
 			dueDate: task.dueDate,
-			priority: task.priority
-		}
+			priority: task.priority,
+		};
 
 		//todos[index] = todo;
 		todos.push(todo);
-
-	}
+	};
 
 	var editTask = (task) => {
+		const todo = {
+			index: task.index,
+			title: task.title,
+			description: task.description,
+			dueDate: task.dueDate,
+			priority: task.priority,
+			project: task.project,
+		};
 
-	const todo = {
-		index: task.index,
-		title: task.title,
-		description: task.description,
-		dueDate: task.dueDate,
-		priority: task.priority,
-		project: task.project
-	}
-
-	//todos[index] = todo;
-	todos[todo.index] = todo;
-
-};
-
-
-
-
+		//todos[index] = todo;
+		todos[todo.index] = todo;
+	};
 
 	return {
 		todos,
@@ -110,8 +94,8 @@ var model = function() {
 		setProject,
 		addProject,
 		getTodos,
-		getTotalTodos
-	}
- };
+		getTotalTodos,
+	};
+};
 
 export default model;
