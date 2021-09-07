@@ -1,87 +1,87 @@
+import model from "./model";
+
 function view(controller) {
-	//Project Selection
-	// const urgent = document.querySelector("#urgent");
-	// urgent.addEventListener("click",function(e){ controller.setProject(e,urgent.innerHTML) } );
+  //Project Selection
+  // const urgent = document.querySelector("#urgent");
+  // urgent.addEventListener("click",function(e){ controller.setProject(e,urgent.innerHTML) } );
 
-	//Selectors Projects
+  //Selectors Projects
 
-	const projectButton = document.querySelector("#newProject");
-	projectButton.addEventListener("click", function () {
-		newProject();
-	});
+  const projectButton = document.querySelector("#newProject");
+  projectButton.addEventListener("click", function () {
+    newProject();
+  });
 
-	//function to capture input data
-	function newProject() {
-		let project = controller.addProjectInfo();
-		createProject(project);
-		eventProject();
-	}
+  //function to capture input data
+  function newProject() {
+    let project = controller.addProjectInfo();
+    createProject(project);
+    eventProject();
+  }
 
-	//
+  //
 
-	function eventProject() {
-		let liList = controller.projectArray();
+  function eventProject() {
+    let liList = controller.projectArray();
 
-		liList.forEach((li) => {
-			li.addEventListener("click", function (e) {
-				setProjectView(e);
-			});
-		});
-	}
+    liList.forEach((li) => {
+      li.addEventListener("click", function (e) {
+        setProjectView(e);
+      });
+    });
+  }
 
-	function setProjectView(e) {
-		controller.setProject(e);
-		renderTask();
-	}
+  function setProjectView(e) {
+    controller.setProject(e);
+    renderTask();
+  }
 
-	controller.setProject();
-	eventProject();
+  controller.setProject();
+  eventProject();
 
-	function createProject(project) {
-		const li = document.createElement("li");
-		const span = document.createElement("span");
-		const a = document.createElement("a");
+  function createProject(project) {
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    const a = document.createElement("a");
 
-		a.href = "#!";
-		a.classList.add("collection-item", "grey-text");
-		a.dataset.val = project;
+    a.href = "#!";
+    a.classList.add("collection-item", "grey-text");
+    a.dataset.val = project;
 
-		span.classList.add("badge", "new", "indigo", "darken-4", "white-text");
-		span.innerHTML = "0";
+    span.classList.add("badge", "new", "indigo", "darken-4", "white-text");
+    span.innerHTML = "0";
 
-		a.innerHTML = project;
+    a.innerHTML = project;
 
-		a.append(span);
-		li.append(a);
+    a.append(span);
+    li.append(a);
 
-		myProjects.insertBefore(li, divider);
-	}
+    myProjects.insertBefore(li, divider);
+  }
 
-	function updateCount(i) {
-		let currentProject = controller.getProjectLi();
+  function updateCount(i) {
+    let currentProject = controller.getProjectLi();
 
-		let totalCount = controller.getTotalTodos().length;
-		console.log(totalCount);
-		console.log(controller.getTotalTodos());
+    let totalCount = controller.getTotalTodos().length;
 
-		currentProject.children[0].innerHTML = i;
+    currentProject.children[0].innerHTML = i;
 
-		viewAll.children[0].innerHTML = totalCount;
-	}
+    viewAll.children[0].innerHTML = totalCount;
+  }
 
-	//Selectors
+  //Selectors
 
-	const container = document.querySelector("#cardzone");
-	const button = document.querySelector("#new-task-button");
+  const container = document.querySelector("#cardzone");
+  const button = document.querySelector("#new-task-button");
 
-	const myProjects = document.querySelector("#slide-out");
-	const divider = document.querySelector("#divider");
-	const viewAll = document.querySelector("#view-all");
+  const myProjects = document.querySelector("#slide-out");
+  const divider = document.querySelector("#divider");
+  const viewAll = document.querySelector("#view-all");
 
-	button.addEventListener("click", generatecard);
+  button.addEventListener("click", generatecard);
 
-	function generatecard() {
-		let input = `
+  function generatecard() {
+    let input = `
 				<div class="card grey lighten-2" id="inputcard">
 
 					<div class="card-content">
@@ -138,26 +138,26 @@ function view(controller) {
 
 		`;
 
-		//Append Card to Container
+    //Append Card to Container
 
-		container.insertAdjacentHTML("afterBegin", input);
+    container.insertAdjacentHTML("afterBegin", input);
 
-		//Materialize
-		M.AutoInit(document.getElementById("inputcard"));
+    //Materialize
+    M.AutoInit(document.getElementById("inputcard"));
 
-		//Selectors
-		const savebutton = document.querySelector("#save-button");
+    //Selectors
+    const savebutton = document.querySelector("#save-button");
 
-		//Event Listeners
-		savebutton.addEventListener("click", saveTask);
-	}
+    //Event Listeners
+    savebutton.addEventListener("click", saveTask);
+  }
 
-	function editCard(e) {
-		let todo = controller.editTask(e).currentindex;
-		let currentCard = controller.editTask(e).card;
-		let currentindex = controller.editTask(e).index;
+  function editCard(e) {
+    let todo = controller.editTask(e).currentindex;
+    let currentCard = controller.editTask(e).card;
+    let currentindex = controller.editTask(e).index;
 
-		let input = `
+    let input = `
 				<div class="card grey lighten-2" id="inputcard">
 
 					<div class="card-content">
@@ -214,67 +214,67 @@ function view(controller) {
 
 		`;
 
-		//Append Card to Container
+    //Append Card to Container
 
-		currentCard.innerHTML = input;
+    currentCard.innerHTML = input;
 
-		//Materialize
-		M.AutoInit(document.getElementById("inputcard"));
+    //Materialize
+    M.AutoInit(document.getElementById("inputcard"));
 
-		//Selectors
-		const savebutton = document.querySelector("#save-button");
+    //Selectors
+    const savebutton = document.querySelector("#save-button");
 
-		//Event Listeners
-		savebutton.addEventListener("click", function () {
-			saveEditedTask(currentindex);
-		});
-	}
+    //Event Listeners
+    savebutton.addEventListener("click", function () {
+      saveEditedTask(currentindex);
+    });
+  }
 
-	function clearTasks() {
-		const inputcard = document.querySelector("#cardzone");
+  function clearTasks() {
+    const inputcard = document.querySelector("#cardzone");
 
-		while (inputcard.firstChild) {
-			inputcard.removeChild(inputcard.lastChild);
-		}
-	}
+    while (inputcard.firstChild) {
+      inputcard.removeChild(inputcard.lastChild);
+    }
+  }
 
-	function saveTask() {
-		controller.getTaskInfo();
-		renderTask();
-	}
+  function saveTask() {
+    controller.getTaskInfo();
+    renderTask();
+  }
 
-	function saveEditedTask(index) {
-		controller.getTaskInfo(index);
-		renderTask();
-		//Pass project to render task for filtering
-	}
+  function saveEditedTask(index) {
+    controller.getTaskInfo(index);
+    renderTask();
+    //Pass project to render task for filtering
+  }
 
-	function startDeleteTask(e) {
-		controller.deleteTask(e);
-		renderTask();
-	}
+  function startDeleteTask(e) {
+    controller.deleteTask(e);
+    renderTask();
+  }
 
-	function renderTask(filter) {
-		//Clean up board
-		clearTasks();
+  function renderTask(filter) {
+    //Clean up board
+    clearTasks();
 
-		//Get all tasks from Model
+    //Get all tasks from Model
 
-		if (filter === undefined) {
-			filter = "Inbox";
-		} else {
-			filter;
-		}
+    if (filter === undefined) {
+      filter = "Inbox";
+    } else {
+      filter;
+    }
 
-		var tasks = controller.getTodos(filter);
+    var tasks = controller.getTodos(filter);
 
-		//Task Count
-		let i = 0;
+    //Task Count
+    let i = 0;
 
-		tasks.forEach((task) => {
-			i += 1;
+    tasks.forEach((task) => {
+      i += 1;
 
-			var taskHtml = `
+      var taskHtml = `
 					<div class="card grey lighten-2" data-index=${task.index}>
 
 						<div class="card-content">
@@ -315,29 +315,36 @@ function view(controller) {
 				
 				`;
 
-			container.insertAdjacentHTML("beforeend", taskHtml);
+      container.insertAdjacentHTML("beforeend", taskHtml);
 
-			//Update Project Count
-			updateCount(i);
+      //Update Project Count
+      updateCount(i);
 
-			//Selector Delete Button
-			var deleteButtons = document.querySelectorAll("#delete");
-			deleteButtons.forEach(function (button) {
-				button.addEventListener("click", startDeleteTask);
-			});
+      //Selector Delete Button
+      var deleteButtons = document.querySelectorAll("#delete");
+      deleteButtons.forEach(function (button) {
+        button.addEventListener("click", startDeleteTask);
+      });
 
-			//Selector Edit Button
-			var editButtons = document.querySelectorAll("#edit");
-			editButtons.forEach(function (button) {
-				button.addEventListener("click", editCard);
-			});
-		});
-	}
+      //Selector Edit Button
+      var editButtons = document.querySelectorAll("#edit");
+      editButtons.forEach(function (button) {
+        button.addEventListener("click", editCard);
+      });
+    });
+  }
 
-	return {
-		generatecard,
-		renderTask,
-	};
+  //Initialize
+  const initialLoadTasks = async function () {
+    controller.fetchTodos(renderTask);
+  };
+
+  initialLoadTasks();
+
+  return {
+    generatecard,
+    renderTask,
+  };
 }
 
 export default view;
