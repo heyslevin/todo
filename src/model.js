@@ -4,6 +4,14 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  updateDoc,
+  orderBy,
+  writeBatch,
 } from "firebase/firestore/lite";
 
 const model = function () {
@@ -21,39 +29,9 @@ const model = function () {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let addNew = async function () {
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        first: "Alan",
-        middle: "Mathison",
-        last: "Turing",
-        born: 1912,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
+  // Global variables
 
-  const fetchTodos = async function (render) {
-    const querySnapshot = await getDocs(collection(db, "tasks"));
-    querySnapshot.forEach((doc) => {
-      todos.push(doc.data());
-    });
-
-    render();
-  };
-
-  var todos = [
-    {
-      index: 0,
-      project: "Inbox",
-      title: "Hello Test",
-      description: "This is a demo todo",
-      dueDate: "September 1, 2021",
-      priority: "High",
-    },
-  ];
+  var todos = [];
 
   var filteredTodos = [];
 
@@ -74,6 +52,10 @@ const model = function () {
     currentE = liCurrent;
   };
 
+  const setTodos = async (newTodos) => {
+    todos = newTodos;
+  };
+
   var getProject = () => {
     return current;
   };
@@ -82,11 +64,11 @@ const model = function () {
     return currentE;
   };
 
-  var addTask = (task) => {
+  var addTask = (task, render) => {
     if (task.index === undefined) {
-      newTask(task);
+      newTask(task, render);
     } else {
-      editTask(task);
+      editTask(task, render);
     }
   };
 
@@ -97,29 +79,88 @@ const model = function () {
   var getTodos = () => {
     if (current === "View All") {
       current = "Inbox";
-      console.log(todos);
       return todos;
     } else {
       let filtered = todos.filter((todo) => {
         return todo.project === current;
       });
-      console.log(filtered);
       return filtered;
     }
   };
 
   //Managing tasks
+  const updateLocalTodos = async function updateTodoArrayInModel(
+    querySnapshot
+  ) {
+    let updatedTodos = await querySnapshot.docs.map((doc) => doc.data());
+    return updatedTodos;
+  };
 
-  const uploadTask = async function (todo) {
+  const updateFirebaseIndex = async function indexAfterDeletedItem() {
+    const batch = writeBatch(db);
+
+    const collectionRef = collection(db, "tasks");
+    const snapShot = query(collectionRef, orderBy("index"));
+    const querySnapshot = await getDocs(snapShot);
+
+    querySnapshot.forEach(async (doc, i) => {
+      batch.update(doc.ref, { index: i });
+    });
+
+    await batch.commit();
+  };
+
+  const fetchTodos = async function readTasksFromFirebase(render) {
+    await updateFirebaseIndex();
+
+    async function fetching() {
+      const collectionRef = collection(db, "tasks");
+      const q = query(collectionRef, orderBy("index"));
+      const querySnapshot = await getDocs(q);
+      const newTodos = await updateLocalTodos(querySnapshot);
+      return newTodos;
+    }
+    let todos = await fetching();
+
+    setTodos(todos);
+    render();
+  };
+
+  const uploadTask = async function uploadTaskToFirebase(todo, render) {
     try {
       const docRef = await addDoc(collection(db, "tasks"), todo);
       console.log("Document saved with id: " + docRef.id);
+      fetchTodos(render);
     } catch (e) {
       console.log("error uploading todo: ", e);
     }
   };
 
-  var newTask = (task) => {
+  let deleteOnFirebase = async function deleteTaskOnDatabase(
+    taskIndex,
+    render
+  ) {
+    //select database collection
+    const collectionRef = collection(db, "tasks");
+    //Query database
+    const index = +taskIndex;
+    const q = query(collectionRef, where("index", "==", index));
+
+    //GetDocs from query
+    const querySnapshot = await getDocs(q);
+
+    //Delete item
+    querySnapshot.forEach(async (doc) => {
+      if (doc.exists) {
+        await deleteDoc(doc.ref);
+        fetchTodos(render);
+      } else {
+        console.log("document not found");
+      }
+    });
+  };
+
+  var newTask = (task, render) => {
     const todo = {
       index: todos.length,
       project: task.project,
@@ -129,9 +170,7 @@ const model = function () {
       priority: task.priority,
     };
 
-    uploadTask(todo);
-    //todos[index] = todo;
-    todos.push(todo);
+    uploadTask(todo, render);
   };
 
   var editTask = (task) => {
@@ -161,6 +200,7 @@ const model = function () {
     getTodos,
     getTotalTodos,
     fetchTodos,
+    deleteOnFirebase,
   };
 };
 

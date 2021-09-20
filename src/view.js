@@ -239,8 +239,7 @@ function view(controller) {
   }
 
   function saveTask() {
-    controller.getTaskInfo();
-    renderTask();
+    controller.getTaskInfo(renderTask);
   }
 
   function saveEditedTask(index) {
@@ -250,8 +249,8 @@ function view(controller) {
   }
 
   function startDeleteTask(e) {
-    controller.deleteTask(e);
-    renderTask();
+    controller.deleteTask(e, renderTask);
+    // renderTask();
   }
 
   function renderTask(filter) {

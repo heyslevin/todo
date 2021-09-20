@@ -1,7 +1,7 @@
 function controller(model) {
-  function getTaskInfo(index) {
+  function getTaskInfo(render) {
     var taskViewModel = {
-      index: index,
+      index: undefined,
       title: document.querySelector("#title").value,
       description: document.querySelector("#description").value,
       dueDate: document.querySelector("#dueDate").value,
@@ -9,7 +9,7 @@ function controller(model) {
       project: model.getProject(),
     };
 
-    model.addTask(taskViewModel);
+    model.addTask(taskViewModel, render);
   }
 
   function addProjectInfo() {
@@ -68,10 +68,12 @@ function controller(model) {
     return model.getTotalTodos();
   }
 
-  function deleteTask(e) {
+  function deleteTask(e, renderCallBack) {
     //Gets Card index value
     var index = e.target.closest(".card").dataset.index;
-    model.todos.splice(index, 1);
+    // model.todos.splice(index, 1);
+    //NEXT HERE: Integrate model.deleteOnFirebase, and then update todos array
+    model.deleteOnFirebase(index, renderCallBack);
   }
 
   function editTask(e) {
