@@ -14,6 +14,8 @@ import {
   writeBatch,
 } from "firebase/firestore/lite";
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 const model = function () {
   const firebaseConfig = {
     apiKey: "AIzaSyCQu6_4bo2mXWcDc93buu5cEYmCjOHIg9A",
@@ -28,6 +30,23 @@ const model = function () {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth();
+
+  // Sign in me
+
+  signInWithEmailAndPassword(auth, "odin@odinproject.com", "odinproject")
+    .then((userCredential) => {
+      //Signed in
+      const user = userCredential.user;
+      console.log("Signed in");
+      console.log(user);
+    })
+    .catch((error) => {
+      const errorCode = error.errorCode;
+      const errorMessage = error.message;
+      console.log("Could not sign in");
+      console.log(errorMessage);
+    });
 
   // Global variables
 
@@ -52,7 +71,7 @@ const model = function () {
     currentE = liCurrent;
   };
 
-  const setTodos = async (newTodos) => {
+  const setTodos = (newTodos) => {
     todos = newTodos;
   };
 
@@ -65,10 +84,13 @@ const model = function () {
   };
 
   var addTask = (task, render) => {
+    console.log("incoming task index:" + task.index);
     if (task.index === undefined) {
       newTask(task, render);
-    } else {
+    } else if (Number.isInteger(+task.index)) {
       editTask(task, render);
+    } else {
+      alert("error in adding task");
     }
   };
 
@@ -161,6 +183,7 @@ const model = function () {
   };
 
   var newTask = (task, render) => {
+    console.log("adding new task");
     const todo = {
       index: todos.length,
       project: task.project,
@@ -173,9 +196,23 @@ const model = function () {
     uploadTask(todo, render);
   };
 
-  var editTask = (task) => {
+  const editOnFirebase = async (todo) => {
+    let collectionRef = collection(db, "tasks");
+    let q = query(collectionRef, where("index", "==", todo.index));
+
+    let allDocs = await getDocs(q);
+    let docSnap = allDocs.docs[0];
+    if (!docSnap.empty) {
+      await updateDoc(docSnap.ref, todo);
+    } else {
+      console.log("no such document");
+    }
+  };
+
+  var editTask = async (task, render) => {
+    console.log("editing task");
     const todo = {
-      index: task.index,
+      index: +task.index,
       title: task.title,
       description: task.description,
       dueDate: task.dueDate,
@@ -183,8 +220,11 @@ const model = function () {
       project: task.project,
     };
 
+    await editOnFirebase(todo);
+    fetchTodos(render);
+
     //todos[index] = todo;
-    todos[todo.index] = todo;
+    // todos[todo.index] = todo;
   };
 
   return {
