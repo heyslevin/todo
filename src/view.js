@@ -153,9 +153,11 @@ function view(controller) {
   }
 
   function editCard(e) {
-    let todo = controller.editTask(e).currentindex;
-    let currentCard = controller.editTask(e).card;
-    let currentindex = controller.editTask(e).index;
+    let selectedTodo = controller.editTask(e);
+
+    let todo = selectedTodo.currentindex;
+    let currentCard = selectedTodo.card;
+    let currentIndex = selectedTodo.index;
 
     let input = `
 				<div class="card grey lighten-2" id="inputcard">
@@ -204,7 +206,7 @@ function view(controller) {
 
 						<div>
 
-						<a href="" onclick="return false;" class="btn btn-large" id="save-button">Save</a>
+						<a href="" onclick="return false;" class="btn btn-large" id="save-button" data-index=${currentIndex}>Save</a>
 	
 						</div>
 
@@ -225,9 +227,7 @@ function view(controller) {
     const savebutton = document.querySelector("#save-button");
 
     //Event Listeners
-    savebutton.addEventListener("click", function () {
-      saveEditedTask(currentindex);
-    });
+    savebutton.addEventListener("click", saveEditedTask);
   }
 
   function clearTasks() {
@@ -238,13 +238,13 @@ function view(controller) {
     }
   }
 
-  function saveTask() {
+  function saveTask(e) {
     controller.getTaskInfo(renderTask);
   }
 
-  function saveEditedTask(index) {
-    controller.getTaskInfo(index);
-    renderTask();
+  function saveEditedTask(e) {
+    let index = e.target.dataset.index;
+    controller.getTaskInfo(renderTask, index);
     //Pass project to render task for filtering
   }
 
@@ -269,7 +269,7 @@ function view(controller) {
 
     //Task Count
     let i = 0;
-
+    console.log("rendering");
     tasks.forEach((task) => {
       i += 1;
 

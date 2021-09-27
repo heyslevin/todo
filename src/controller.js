@@ -1,14 +1,14 @@
 function controller(model) {
-  function getTaskInfo(render) {
+  //Fix here, separte things for editing tasks
+  function getTaskInfo(render, index) {
     var taskViewModel = {
-      index: undefined,
+      index: index,
       title: document.querySelector("#title").value,
       description: document.querySelector("#description").value,
       dueDate: document.querySelector("#dueDate").value,
       priority: document.querySelector("#priority").value,
       project: model.getProject(),
     };
-
     model.addTask(taskViewModel, render);
   }
 
@@ -80,7 +80,9 @@ function controller(model) {
     //Gets Card index value
     var index = e.target.closest(".card").dataset.index;
     var card = e.target.closest(".card");
-    var currentindex = model.todos[index];
+    let todoArray = model.getTotalTodos();
+    var currentindex = todoArray[index];
+    console.log(currentindex);
 
     return {
       index,
