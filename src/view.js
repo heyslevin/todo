@@ -7,6 +7,8 @@ function view(controller) {
 
   //Selectors Projects
 
+  //Fix here. Add a delete project button, not available for View All or Inbox or Urgent
+
   const projectButton = document.querySelector("#newProject");
   projectButton.addEventListener("click", function () {
     newProject();
@@ -15,7 +17,7 @@ function view(controller) {
   //function to capture input data
   function newProject() {
     let project = controller.addProjectInfo();
-    createProject(project);
+    renderIndividualProject(project);
     eventProject();
   }
 
@@ -36,10 +38,30 @@ function view(controller) {
     renderTask();
   }
 
-  controller.setProject();
-  eventProject();
+  function renderAllProjects() {
+    //Get Projects
+    let projects = controller.getProjects();
+    console.log(projects);
+    let filteredProjects = projects.filter((project) => {
+      if (
+        project === "Inbox" ||
+        project === "Urgent" ||
+        project === "View All"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    console.log("filteredProjects is = ");
+    console.log(filteredProjects);
+    //for each project, render project
+    filteredProjects.forEach((project) => {
+      renderIndividualProject(project);
+    });
+  }
 
-  function createProject(project) {
+  function renderIndividualProject(project) {
     const li = document.createElement("li");
     const span = document.createElement("span");
     const a = document.createElement("a");
@@ -335,10 +357,18 @@ function view(controller) {
 
   //Initialize
   const initialLoadTasks = async function () {
-    controller.fetchTodos(renderTask);
+    await controller.fetchTodos(renderTask);
+  };
+
+  const initialLoadProjects = async function () {
+    await controller.fetchProjects(renderAllProjects);
   };
 
   initialLoadTasks();
+  initialLoadProjects(renderAllProjects);
+
+  controller.setProject();
+  eventProject();
 
   return {
     generatecard,

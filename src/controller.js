@@ -30,6 +30,10 @@ function controller(model) {
     return model.getProjectLi();
   }
 
+  function getProjects() {
+    return model.getAllProjects();
+  }
+
   function projectArray() {
     let liList = document.querySelectorAll("a.collection-item");
     return [...liList];
@@ -95,18 +99,24 @@ function controller(model) {
     model.fetchTodos(renderCallBack);
   }
 
+  function fetchProjects(renderCallback) {
+    model.fetchProjects(renderCallback);
+  }
+
   return {
     getTaskInfo,
     projectArray,
     addProjectInfo,
     getProjectInfo,
     getProjectLi,
+    getProjects,
     setProject,
     getTodos,
     getTotalTodos,
     deleteTask,
     editTask,
     fetchTodos,
+    fetchProjects,
   };
 }
 

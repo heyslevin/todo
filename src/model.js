@@ -62,6 +62,7 @@ const model = function () {
 
   var currentE;
 
+  //Fix here. Setup Read
   var addProject = (val) => {
     projects.push(val);
   };
@@ -73,6 +74,10 @@ const model = function () {
 
   const setTodos = (newTodos) => {
     todos = newTodos;
+  };
+
+  const getAllProjects = () => {
+    return projects;
   };
 
   var getProject = () => {
@@ -108,6 +113,23 @@ const model = function () {
       });
       return filtered;
     }
+  };
+
+  //Managing projects
+
+  const updateLocalProjects = (projectArray) => {
+    projects = projectArray;
+  };
+
+  const fetchProjects = async function getProjectsFromFirestore(
+    renderProjects
+  ) {
+    let collectionRef = collection(db, "projects");
+    let snapShot = await getDocs(collectionRef);
+    let projectArray = snapShot.docs.map((doc) => doc.id);
+
+    updateLocalProjects(projectArray);
+    renderProjects();
   };
 
   //Managing tasks
@@ -234,6 +256,7 @@ const model = function () {
     editTask,
     projects,
     getProject,
+    getAllProjects,
     getProjectLi,
     setProject,
     addProject,
@@ -241,6 +264,7 @@ const model = function () {
     getTotalTodos,
     fetchTodos,
     deleteOnFirebase,
+    fetchProjects,
   };
 };
 
