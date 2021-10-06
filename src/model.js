@@ -63,7 +63,14 @@ const model = function () {
   var currentE;
 
   //Fix here. Setup Read
-  var addProject = (val) => {
+  var addProject = async (val) => {
+    try {
+      let docRef = collection(db, "projects");
+      let newDoc = await addDoc(docRef, { projectName: val });
+      console.log("new project added with id: " + newDoc.id);
+    } catch (error) {
+      console.log("error adding new project: ", error);
+    }
     projects.push(val);
   };
 
@@ -86,6 +93,49 @@ const model = function () {
 
   var getProjectLi = () => {
     return currentE;
+  };
+
+  //Delete Project
+  const deleteCurrentProject = async () => {
+    // get Current Project
+
+    console.log("running delete on: " + current);
+    // check current project is deletable
+    if (current === "Inbox" || current === "Urgent" || current === "View All") {
+      alert(`Sorry, I can't delete ${current}. That would be CRAZY`);
+    } else {
+      // Query Project in Firestore
+      let projectsRef = collection(db, "projects");
+      let projectQuery = query(
+        projectsRef,
+        where("projectName", "==", current)
+      );
+      let projectSnapShot = await getDocs(projectQuery);
+
+      // Delete Project
+      projectSnapShot.forEach(async (doc) => {
+        if (doc.exists) {
+          await deleteDoc(doc.ref);
+        } else {
+          console.log("error, doc does not exist ");
+        }
+      });
+
+      // Query Tasks with Current Project
+      console.log("batching with: " + current);
+      const batch = writeBatch(db);
+      let tasksRef = collection(db, "tasks");
+      let taskQuery = query(tasksRef, where("project", "==", current));
+      let taskSnapShot = await getDocs(taskQuery);
+      console.log(taskSnapShot);
+
+      // Batch Delete tasks
+      taskSnapShot.forEach((doc) => {
+        console.log("deleting doc: " + doc.ref);
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+    }
   };
 
   var addTask = (task, render) => {
@@ -126,7 +176,11 @@ const model = function () {
   ) {
     let collectionRef = collection(db, "projects");
     let snapShot = await getDocs(collectionRef);
-    let projectArray = snapShot.docs.map((doc) => doc.id);
+    let projectArray = snapShot.docs.map((doc) => {
+      let docData = doc.data();
+      console.log(docData);
+      return docData.projectName;
+    });
 
     updateLocalProjects(projectArray);
     renderProjects();
@@ -255,6 +309,7 @@ const model = function () {
     newTask,
     editTask,
     projects,
+    deleteCurrentProject,
     getProject,
     getAllProjects,
     getProjectLi,

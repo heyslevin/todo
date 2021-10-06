@@ -12,11 +12,11 @@ function controller(model) {
     model.addTask(taskViewModel, render);
   }
 
-  function addProjectInfo() {
-    var projectInput = document.querySelector("#projectInput");
+  async function addProjectInfo() {
     var project = document.querySelector("#projectInput").value;
+    var projectInput = document.querySelector("#projectInput");
 
-    model.addProject(project);
+    await model.addProject(project);
     projectInput.value = "";
 
     return project;
@@ -31,6 +31,7 @@ function controller(model) {
   }
 
   function getProjects() {
+    //fix here, has to fetch projects first
     return model.getAllProjects();
   }
 
@@ -40,6 +41,7 @@ function controller(model) {
   }
 
   function setProject(e) {
+    console.log("Setting project");
     let inbox = document.querySelector("#inbox");
     let val;
     let liCurrent;
@@ -62,6 +64,11 @@ function controller(model) {
     liCurrent.classList.toggle("grey-text");
 
     model.setProject(val, liCurrent);
+  }
+
+  async function deleteCurrentProject(render) {
+    await model.deleteCurrentProject();
+    await model.fetchProjects(render);
   }
 
   function getTodos() {
@@ -99,14 +106,15 @@ function controller(model) {
     model.fetchTodos(renderCallBack);
   }
 
-  function fetchProjects(renderCallback) {
-    model.fetchProjects(renderCallback);
+  async function fetchProjects(renderCallback) {
+    await model.fetchProjects(renderCallback);
   }
 
   return {
     getTaskInfo,
     projectArray,
     addProjectInfo,
+    deleteCurrentProject,
     getProjectInfo,
     getProjectLi,
     getProjects,

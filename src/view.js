@@ -14,14 +14,25 @@ function view(controller) {
     newProject();
   });
 
+  const deleteProjectButton = document.querySelector("#deleteProject");
+  deleteProjectButton.addEventListener("click", function () {
+    deleteCurrentProject(renderAllProjects);
+  });
+
   //function to capture input data
-  function newProject() {
-    let project = controller.addProjectInfo();
+  async function newProject() {
+    let project = await controller.addProjectInfo();
     renderIndividualProject(project);
     eventProject();
   }
 
-  //
+  //delete Project
+  async function deleteCurrentProject(render) {
+    await controller.deleteCurrentProject(render);
+
+    renderAllProjects();
+    eventProject();
+  }
 
   function eventProject() {
     let liList = controller.projectArray();
@@ -39,9 +50,13 @@ function view(controller) {
   }
 
   function renderAllProjects() {
+    console.log("rendering projects");
+
+    //Clear Projects
+    clearProjects();
     //Get Projects
     let projects = controller.getProjects();
-    console.log(projects);
+    console.log("rendering these projects" + projects);
     let filteredProjects = projects.filter((project) => {
       if (
         project === "Inbox" ||
@@ -61,6 +76,12 @@ function view(controller) {
     });
   }
 
+  function clearProjects() {
+    while (myProjects.firstChild) {
+      myProjects.removeChild(myProjects.lastChild);
+    }
+  }
+
   function renderIndividualProject(project) {
     const li = document.createElement("li");
     const span = document.createElement("span");
@@ -78,7 +99,7 @@ function view(controller) {
     a.append(span);
     li.append(a);
 
-    myProjects.insertBefore(li, divider);
+    myProjects.appendChild(li);
   }
 
   function updateCount(i) {
@@ -96,7 +117,7 @@ function view(controller) {
   const container = document.querySelector("#cardzone");
   const button = document.querySelector("#new-task-button");
 
-  const myProjects = document.querySelector("#slide-out");
+  const myProjects = document.querySelector(".loadedProjects");
   const divider = document.querySelector("#divider");
   const viewAll = document.querySelector("#view-all");
 
@@ -362,13 +383,12 @@ function view(controller) {
 
   const initialLoadProjects = async function () {
     await controller.fetchProjects(renderAllProjects);
+    controller.setProject();
+    eventProject();
   };
 
   initialLoadTasks();
   initialLoadProjects(renderAllProjects);
-
-  controller.setProject();
-  eventProject();
 
   return {
     generatecard,
