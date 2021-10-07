@@ -42,7 +42,7 @@ function controller(model) {
 
   function setProject(e) {
     console.log("Setting project");
-    let inbox = document.querySelector("#inbox");
+    let inbox = document.querySelector('[data-val="Inbox"]');
     let val;
     let liCurrent;
 
@@ -79,6 +79,10 @@ function controller(model) {
     return model.getTotalTodos();
   }
 
+  function getTodoLength(project) {
+    return model.getTodoLength(project);
+  }
+
   function deleteTask(e, renderCallBack) {
     //Gets Card index value
     var index = e.target.closest(".card").dataset.index;
@@ -102,8 +106,8 @@ function controller(model) {
     };
   }
 
-  function fetchTodos(renderCallBack) {
-    model.fetchTodos(renderCallBack);
+  async function fetchTodos(renderCallBack) {
+    await model.fetchTodos(renderCallBack);
   }
 
   async function fetchProjects(renderCallback) {
@@ -121,6 +125,7 @@ function controller(model) {
     setProject,
     getTodos,
     getTotalTodos,
+    getTodoLength,
     deleteTask,
     editTask,
     fetchTodos,

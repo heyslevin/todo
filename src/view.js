@@ -56,24 +56,27 @@ function view(controller) {
     clearProjects();
     //Get Projects
     let projects = controller.getProjects();
-    console.log("rendering these projects" + projects);
-    let filteredProjects = projects.filter((project) => {
-      if (
-        project === "Inbox" ||
-        project === "Urgent" ||
-        project === "View All"
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    });
+    console.log("rendering these projects: " + projects);
+    // let filteredProjects = projects.filter((project) => {
+    //   if (
+    //     project === "Inbox" ||
+    //     project === "Urgent" ||
+    //     project === "View All"
+    //   ) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // });
     console.log("filteredProjects is = ");
     console.log(filteredProjects);
     //for each project, render project
-    filteredProjects.forEach((project) => {
+    projects.forEach((project) => {
+      console.log("now filtering project: " + project);
       renderIndividualProject(project);
     });
+
+    //Next, make a special case for View All
   }
 
   function clearProjects() {
@@ -92,7 +95,9 @@ function view(controller) {
     a.dataset.val = project;
 
     span.classList.add("badge", "new", "indigo", "darken-4", "white-text");
-    span.innerHTML = "0";
+
+    //Sets badge count
+    span.innerHTML = controller.getTodoLength(project);
 
     a.innerHTML = project;
 
@@ -360,7 +365,7 @@ function view(controller) {
       container.insertAdjacentHTML("beforeend", taskHtml);
 
       //Update Project Count
-      updateCount(i);
+      // updateCount(i);
 
       //Selector Delete Button
       var deleteButtons = document.querySelectorAll("#delete");
@@ -377,8 +382,11 @@ function view(controller) {
   }
 
   //Initialize
-  const initialLoadTasks = async function () {
+  const initialLoad = async function () {
+    //gets tasks
     await controller.fetchTodos(renderTask);
+    //gets projects
+    initialLoadProjects(renderAllProjects);
   };
 
   const initialLoadProjects = async function () {
@@ -387,8 +395,7 @@ function view(controller) {
     eventProject();
   };
 
-  initialLoadTasks();
-  initialLoadProjects(renderAllProjects);
+  initialLoad();
 
   return {
     generatecard,

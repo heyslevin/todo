@@ -81,6 +81,7 @@ const model = function () {
 
   const setTodos = (newTodos) => {
     todos = newTodos;
+    console.log(todos);
   };
 
   const getAllProjects = () => {
@@ -163,6 +164,18 @@ const model = function () {
       });
       return filtered;
     }
+  };
+
+  const getTodoLength = (project) => {
+    console.log("todolength on: " + project);
+    let todos = getTotalTodos();
+    console.log("here are todos: " + todos);
+    let filteredTodos = todos.filter((todo) => {
+      console.log("im gonna filter: " + todo.project);
+      return todo.project === project;
+    });
+    console.log("filteredTodos length is: " + filteredTodos);
+    return filteredTodos.length;
   };
 
   //Managing projects
@@ -317,6 +330,7 @@ const model = function () {
     addProject,
     getTodos,
     getTotalTodos,
+    getTodoLength,
     fetchTodos,
     deleteOnFirebase,
     fetchProjects,
