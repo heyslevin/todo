@@ -139,15 +139,17 @@ const model = function () {
     }
   };
 
-  var addTask = (task, render) => {
+  var addTask = async (task, render) => {
     console.log("incoming task index:" + task.index);
     if (task.index === undefined) {
-      newTask(task, render);
+      await newTask(task, render);
     } else if (Number.isInteger(+task.index)) {
-      editTask(task, render);
+      await editTask(task, render);
     } else {
       alert("error in adding task");
     }
+
+    //Next, update project's task count
   };
 
   var getTotalTodos = () => {
@@ -241,7 +243,7 @@ const model = function () {
     try {
       const docRef = await addDoc(collection(db, "tasks"), todo);
       console.log("Document saved with id: " + docRef.id);
-      fetchTodos(render);
+      await fetchTodos(render);
     } catch (e) {
       console.log("error uploading todo: ", e);
     }
@@ -264,14 +266,14 @@ const model = function () {
     querySnapshot.forEach(async (doc) => {
       if (doc.exists) {
         await deleteDoc(doc.ref);
-        fetchTodos(render);
+        await fetchTodos(render);
       } else {
         console.log("document not found");
       }
     });
   };
 
-  var newTask = (task, render) => {
+  var newTask = async (task, render) => {
     console.log("adding new task");
     const todo = {
       index: todos.length,
@@ -282,7 +284,7 @@ const model = function () {
       priority: task.priority,
     };
 
-    uploadTask(todo, render);
+    await uploadTask(todo, render);
   };
 
   const editOnFirebase = async (todo) => {
@@ -310,7 +312,7 @@ const model = function () {
     };
 
     await editOnFirebase(todo);
-    fetchTodos(render);
+    await fetchTodos(render);
 
     //todos[index] = todo;
     // todos[todo.index] = todo;

@@ -1,6 +1,6 @@
 function controller(model) {
   //Fix here, separte things for editing tasks
-  function getTaskInfo(render, index) {
+  async function getTaskInfo(render, index) {
     var taskViewModel = {
       index: index,
       title: document.querySelector("#title").value,
@@ -9,7 +9,8 @@ function controller(model) {
       priority: document.querySelector("#priority").value,
       project: model.getProject(),
     };
-    model.addTask(taskViewModel, render);
+    await model.addTask(taskViewModel, render);
+    return taskViewModel.project;
   }
 
   async function addProjectInfo() {
@@ -83,12 +84,12 @@ function controller(model) {
     return model.getTodoLength(project);
   }
 
-  function deleteTask(e, renderCallBack) {
+  async function deleteTask(e, renderCallBack) {
     //Gets Card index value
     var index = e.target.closest(".card").dataset.index;
     // model.todos.splice(index, 1);
     //NEXT HERE: Integrate model.deleteOnFirebase, and then update todos array
-    model.deleteOnFirebase(index, renderCallBack);
+    await model.deleteOnFirebase(index, renderCallBack);
   }
 
   function editTask(e) {

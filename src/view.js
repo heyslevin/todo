@@ -49,6 +49,18 @@ function view(controller) {
     renderTask();
   }
 
+  function updateViewAll() {
+    let span = document.querySelector("[data-val='View All'] > span");
+    span.innerHTML = controller.getTotalTodos().length;
+  }
+
+  function updateCount(project) {
+    let span = document.querySelector(`[data-val="${project}"] > span`);
+    console.log(span);
+    console.log(controller.getTodoLength(project));
+    span.innerHTML = controller.getTodoLength(project);
+  }
+
   function renderAllProjects() {
     console.log("rendering projects");
 
@@ -68,15 +80,14 @@ function view(controller) {
     //     return true;
     //   }
     // });
-    console.log("filteredProjects is = ");
-    console.log(filteredProjects);
+
     //for each project, render project
     projects.forEach((project) => {
       console.log("now filtering project: " + project);
       renderIndividualProject(project);
     });
 
-    //Next, make a special case for View All
+    updateViewAll();
   }
 
   function clearProjects() {
@@ -105,16 +116,6 @@ function view(controller) {
     li.append(a);
 
     myProjects.appendChild(li);
-  }
-
-  function updateCount(i) {
-    let currentProject = controller.getProjectLi();
-
-    let totalCount = controller.getTotalTodos().length;
-
-    currentProject.children[0].innerHTML = i;
-
-    viewAll.children[0].innerHTML = totalCount;
   }
 
   //Selectors
@@ -286,8 +287,9 @@ function view(controller) {
     }
   }
 
-  function saveTask(e) {
-    controller.getTaskInfo(renderTask);
+  async function saveTask(e) {
+    let project = await controller.getTaskInfo(renderTask);
+    updateCount(project);
   }
 
   function saveEditedTask(e) {
@@ -296,8 +298,9 @@ function view(controller) {
     //Pass project to render task for filtering
   }
 
-  function startDeleteTask(e) {
-    controller.deleteTask(e, renderTask);
+  async function startDeleteTask(e) {
+    await controller.deleteTask(e, renderTask);
+    // NEXT: badge count not updating. use Updatecount
     // renderTask();
   }
 
@@ -314,6 +317,7 @@ function view(controller) {
     }
 
     var tasks = controller.getTodos(filter);
+    updateViewAll();
 
     //Task Count
     let i = 0;
