@@ -42,7 +42,6 @@ function controller(model) {
   }
 
   function setProject(e) {
-    console.log("Setting project");
     let inbox = document.querySelector('[data-val="Inbox"]');
     let val;
     let liCurrent;
@@ -88,7 +87,6 @@ function controller(model) {
     //Gets Card index value
     var index = e.target.closest(".card").dataset.index;
     // model.todos.splice(index, 1);
-    //NEXT HERE: Integrate model.deleteOnFirebase, and then update todos array
     await model.deleteOnFirebase(index, renderCallBack);
   }
 
@@ -98,7 +96,6 @@ function controller(model) {
     var card = e.target.closest(".card");
     let todoArray = model.getTotalTodos();
     var currentindex = todoArray[index];
-    console.log(currentindex);
 
     return {
       index,

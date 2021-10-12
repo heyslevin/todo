@@ -67,10 +67,7 @@ const model = function () {
     try {
       let docRef = collection(db, "projects");
       let newDoc = await addDoc(docRef, { projectName: val });
-      console.log("new project added with id: " + newDoc.id);
-    } catch (error) {
-      console.log("error adding new project: ", error);
-    }
+    } catch (error) {}
     projects.push(val);
   };
 
@@ -81,7 +78,6 @@ const model = function () {
 
   const setTodos = (newTodos) => {
     todos = newTodos;
-    console.log(todos);
   };
 
   const getAllProjects = () => {
@@ -100,7 +96,6 @@ const model = function () {
   const deleteCurrentProject = async () => {
     // get Current Project
 
-    console.log("running delete on: " + current);
     // check current project is deletable
     if (current === "Inbox" || current === "Urgent" || current === "View All") {
       alert(`Sorry, I can't delete ${current}. That would be CRAZY`);
@@ -123,12 +118,10 @@ const model = function () {
       });
 
       // Query Tasks with Current Project
-      console.log("batching with: " + current);
       const batch = writeBatch(db);
       let tasksRef = collection(db, "tasks");
       let taskQuery = query(tasksRef, where("project", "==", current));
       let taskSnapShot = await getDocs(taskQuery);
-      console.log(taskSnapShot);
 
       // Batch Delete tasks
       taskSnapShot.forEach((doc) => {
@@ -140,7 +133,6 @@ const model = function () {
   };
 
   var addTask = async (task, render) => {
-    console.log("incoming task index:" + task.index);
     if (task.index === undefined) {
       await newTask(task, render);
     } else if (Number.isInteger(+task.index)) {
@@ -169,14 +161,10 @@ const model = function () {
   };
 
   const getTodoLength = (project) => {
-    console.log("todolength on: " + project);
     let todos = getTotalTodos();
-    console.log("here are todos: " + todos);
     let filteredTodos = todos.filter((todo) => {
-      console.log("im gonna filter: " + todo.project);
       return todo.project === project;
     });
-    console.log("filteredTodos length is: " + filteredTodos);
     return filteredTodos.length;
   };
 
@@ -193,7 +181,6 @@ const model = function () {
     let snapShot = await getDocs(collectionRef);
     let projectArray = snapShot.docs.map((doc) => {
       let docData = doc.data();
-      console.log(docData);
       return docData.projectName;
     });
 
@@ -262,19 +249,28 @@ const model = function () {
     //GetDocs from query
     const querySnapshot = await getDocs(q);
 
-    //Delete item
-    querySnapshot.forEach(async (doc) => {
+    for (const doc of querySnapshot.docs) {
       if (doc.exists) {
         await deleteDoc(doc.ref);
         await fetchTodos(render);
       } else {
         console.log("document not found");
       }
-    });
+    }
+
+    // //Delete item
+    // querySnapshot.forEach(async (doc) => {
+    //   if (doc.exists) {
+    //     await deleteDoc(doc.ref);
+    //     await fetchTodos(render);
+    //     console.log("INSIDE QUERYSNAPSHOT");
+    //   } else {
+    //     console.log("document not found");
+    //   }
+    // });
   };
 
   var newTask = async (task, render) => {
-    console.log("adding new task");
     const todo = {
       index: todos.length,
       project: task.project,
@@ -301,7 +297,6 @@ const model = function () {
   };
 
   var editTask = async (task, render) => {
-    console.log("editing task");
     const todo = {
       index: +task.index,
       title: task.title,

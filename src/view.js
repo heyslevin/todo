@@ -56,19 +56,14 @@ function view(controller) {
 
   function updateCount(project) {
     let span = document.querySelector(`[data-val="${project}"] > span`);
-    console.log(span);
-    console.log(controller.getTodoLength(project));
     span.innerHTML = controller.getTodoLength(project);
   }
 
   function renderAllProjects() {
-    console.log("rendering projects");
-
     //Clear Projects
     clearProjects();
     //Get Projects
     let projects = controller.getProjects();
-    console.log("rendering these projects: " + projects);
     // let filteredProjects = projects.filter((project) => {
     //   if (
     //     project === "Inbox" ||
@@ -83,7 +78,6 @@ function view(controller) {
 
     //for each project, render project
     projects.forEach((project) => {
-      console.log("now filtering project: " + project);
       renderIndividualProject(project);
     });
 
@@ -300,8 +294,8 @@ function view(controller) {
 
   async function startDeleteTask(e) {
     await controller.deleteTask(e, renderTask);
-    // NEXT: badge count not updating. use Updatecount
-    // renderTask();
+    let project = controller.getProjectInfo();
+    updateCount(project);
   }
 
   function renderTask(filter) {
@@ -321,7 +315,6 @@ function view(controller) {
 
     //Task Count
     let i = 0;
-    console.log("rendering");
     tasks.forEach((task) => {
       i += 1;
 
