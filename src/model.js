@@ -109,13 +109,22 @@ const model = function () {
       let projectSnapShot = await getDocs(projectQuery);
 
       // Delete Project
-      projectSnapShot.forEach(async (doc) => {
-        if (doc.exists) {
-          await deleteDoc(doc.ref);
+
+      for (const project of projectSnapShot.docs) {
+        if (project.exists) {
+          await deleteDoc(project.ref);
         } else {
-          console.log("error, doc does not exist ");
+          console.log("error, project does not exist ");
         }
-      });
+      }
+
+      // projectSnapShot.forEach(async (doc) => {
+      //   if (doc.exists) {
+      //     await deleteDoc(doc.ref);
+      //   } else {
+      //     console.log("error, doc does not exist ");
+      //   }
+      // });
 
       // Query Tasks with Current Project
       const batch = writeBatch(db);
@@ -123,12 +132,17 @@ const model = function () {
       let taskQuery = query(tasksRef, where("project", "==", current));
       let taskSnapShot = await getDocs(taskQuery);
 
-      // Batch Delete tasks
-      taskSnapShot.forEach((doc) => {
-        console.log("deleting doc: " + doc.ref);
+      for (const doc of taskSnapShot.docs) {
+        console.log("deleting doc: " + JSON.stringify(doc.ref));
         batch.delete(doc.ref);
-      });
+      }
+      // Batch Delete tasks
+      // taskSnapShot.forEach((doc) => {
+      //   console.log("deleting doc: " + doc.ref);
+      //   batch.delete(doc.ref);
+      // });
       await batch.commit();
+      console.log("deletes complete");
     }
   };
 
@@ -140,8 +154,6 @@ const model = function () {
     } else {
       alert("error in adding task");
     }
-
-    //Next, update project's task count
   };
 
   var getTotalTodos = () => {
@@ -149,6 +161,7 @@ const model = function () {
   };
 
   var getTodos = () => {
+    console.log("getting current: " + current);
     if (current === "View All") {
       current = "Inbox";
       return todos;
@@ -212,6 +225,7 @@ const model = function () {
 
   const fetchTodos = async function readTasksFromFirebase(render) {
     await updateFirebaseIndex();
+    console.log("rendering");
 
     async function fetching() {
       const collectionRef = collection(db, "tasks");
@@ -223,6 +237,7 @@ const model = function () {
     let todos = await fetching();
 
     setTodos(todos);
+    console.log(todos);
     render();
   };
 

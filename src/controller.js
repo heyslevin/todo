@@ -45,6 +45,7 @@ function controller(model) {
     let inbox = document.querySelector('[data-val="Inbox"]');
     let val;
     let liCurrent;
+    console.log("e is " + e);
 
     if (e === undefined) {
       val = inbox.dataset.val;
@@ -63,12 +64,12 @@ function controller(model) {
 
     liCurrent.classList.toggle("grey-text");
 
+    console.log("gonna add " + val + liCurrent);
     model.setProject(val, liCurrent);
   }
 
   async function deleteCurrentProject(render) {
     await model.deleteCurrentProject();
-    await model.fetchProjects(render);
   }
 
   function getTodos() {

@@ -29,9 +29,8 @@ function view(controller) {
   //delete Project
   async function deleteCurrentProject(render) {
     await controller.deleteCurrentProject(render);
-
-    renderAllProjects();
-    eventProject();
+    controller.setProject();
+    initialLoad();
   }
 
   function eventProject() {
@@ -298,6 +297,8 @@ function view(controller) {
     updateCount(project);
   }
 
+  //Next: On delete project, set current to Inbox, and render Inbox
+
   function renderTask(filter) {
     //Clean up board
     clearTasks();
@@ -310,7 +311,10 @@ function view(controller) {
       filter;
     }
 
+    console.log("filter is: " + filter);
+
     var tasks = controller.getTodos(filter);
+    console.log("here are tasks to render: " + tasks);
     updateViewAll();
 
     //Task Count
