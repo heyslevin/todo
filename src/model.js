@@ -66,7 +66,8 @@ const model = function () {
   var addProject = async (val) => {
     try {
       let docRef = collection(db, "projects");
-      let newDoc = await addDoc(docRef, { projectName: val });
+      let index = projects.length - 2;
+      await addDoc(docRef, { projectName: val, index: index });
     } catch (error) {}
     projects.push(val);
   };
@@ -143,6 +144,20 @@ const model = function () {
       // });
       await batch.commit();
       console.log("deletes complete");
+
+      //Batch update index on projects
+      let batchIndex = writeBatch(db);
+      let collectionProjectIndex = collection(db, "projects");
+      let projectIndexSnapshot = await getDocs(collectionProjectIndex);
+      let i = 0;
+
+      for (let i = 0; i < projectIndexSnapshot.docs.length; i++) {
+        console.log("updating project index");
+        console.log(projectIndexSnapshot.docs[i].ref, i);
+        batchIndex.update(projectIndexSnapshot.docs[i].ref, { index: i });
+      }
+
+      await batchIndex.commit();
     }
   };
 
@@ -191,13 +206,18 @@ const model = function () {
     renderProjects
   ) {
     let collectionRef = collection(db, "projects");
-    let snapShot = await getDocs(collectionRef);
+    let q = query(collectionRef, orderBy("index"));
+    let snapShot = await getDocs(q);
     let projectArray = snapShot.docs.map((doc) => {
       let docData = doc.data();
       return docData.projectName;
     });
 
-    updateLocalProjects(projectArray);
+    //Reorganize order of projects
+    let defaults = ["Inbox", "Urgent"];
+    let allProjects = [...defaults, ...projectArray];
+
+    updateLocalProjects(allProjects);
     renderProjects();
   };
 

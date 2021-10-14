@@ -15,8 +15,8 @@ function view(controller) {
   });
 
   const deleteProjectButton = document.querySelector("#deleteProject");
-  deleteProjectButton.addEventListener("click", function () {
-    deleteCurrentProject(renderAllProjects);
+  deleteProjectButton.addEventListener("click", async function () {
+    await deleteCurrentProject(renderAllProjects);
   });
 
   //function to capture input data
